@@ -1,0 +1,24 @@
+# dpdk错误码查找
+在服务器上重新运行mtcp的app时，出现一个错误。
+
+```
+$ sudo ./epserver -p /home/username/www/ -f epserver.conf -N 8
+....
+EAL: Error - exiting with code: 1
+  Cause: Cannot init mbuf pool, errno: 17
+....
+```
+不知道这玩意啥意思，群里有个老哥教我。
+```
+$ grep 17 /usr/include/asm-generic/errno-base.h 
+#define EEXIST      17  /* File exists */
+$ grep EEXIST ./dpdk/lib/librte_mbuf/rte_mbuf.h            //这句是在mtcp项目根目录执行的
+*    - EEXIST - a memzone with the same name already exists
+```
+所以现在就是有个同名的内存空间已存在，可能就是上次运行时出问题，导致缓冲区没有清除。
+
+```
+$ sudo htop          //然后找到自己运行的程序 kill掉
+```
+- kill了之后服务器重启了，差点捅娄子了。还好是内部服务器，没啥大问题。之前运行了100+天了，以后少搞`sudo kill`，太危险了。
+- 还好重启之后就没别的问题了。重新配置就行。
