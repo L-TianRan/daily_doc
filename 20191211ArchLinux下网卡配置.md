@@ -12,3 +12,5 @@ gateway=172.16.0.254
 
 
 重启网络服务用`systemctl restart netctl.service`
+
+Read the wiki on [archwiki](https://wiki.archlinux.org/index.php/Systemd#Using_units)
